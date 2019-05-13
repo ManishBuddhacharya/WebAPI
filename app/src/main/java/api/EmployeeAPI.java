@@ -6,6 +6,7 @@ import model.Employee;
 import model.EmployeeCUD;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -23,6 +24,12 @@ public interface EmployeeAPI {
 
     @PUT("update/{empID}")
     Call<Void> updateEmployee(@Path("empId") int empID, @Body EmployeeCUD emp);
+
+
+    @DELETE("/delete/{empID}")
+    Call<Void> deleteEmployee(@Path("empId") int empID);
+
+
 
 
 
