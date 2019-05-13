@@ -1,5 +1,7 @@
 package com.e.api;
 
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -30,7 +32,7 @@ public class UpdateEmployeeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_update_employee);
 
         btnSearch = findViewById(R.id.btnSearch);
-        btnDelete= findViewById(R.id.btnDelete);
+        btnDelete = findViewById(R.id.btnDelete);
         btnUpdate = findViewById(R.id.btnUpdate);
         etNo = findViewById(R.id.etID);
         etName = findViewById(R.id.etName);
@@ -59,8 +61,8 @@ public class UpdateEmployeeActivity extends AppCompatActivity {
         });
     }
 
-    private void createInstance(){
-        retrofit= new Retrofit.Builder()
+    private void createInstance() {
+        retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
@@ -69,20 +71,27 @@ public class UpdateEmployeeActivity extends AppCompatActivity {
 
     private void deleteEmployee() {
         createInstance();
-        int id =Integer.parseInt(etNo.getText().toString());
 
-        Call<Void> voidCall = employeeAPI.deleteEmployee(id);
-        voidCall.enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                Toast.makeText(UpdateEmployeeActivity.this, "Successful Deleted;", Toast.LENGTH_LONG).show();
-            }
 
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                Toast.makeText(UpdateEmployeeActivity.this, "Error : "+t.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
+        new AlertDialog.Builder(this).setTitle("Title").setMessage("Do you really want Delete?")
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick (DialogInterface dialog,int whichButton){
+                        Call<Void> voidCall = employeeAPI.deleteEmployee(Integer.parseInt(etNo.getText().toString()));
+                        voidCall.enqueue(new Callback<Void>() {
+                            @Override
+                            public void onResponse(Call<Void> call, Response<Void> response) {
+                                Toast.makeText(UpdateEmployeeActivity.this, "Successful Deleted;", Toast.LENGTH_LONG).show();
+                            }
+
+                            @Override
+                            public void onFailure(Call<Void> call, Throwable t) {
+                                Toast.makeText(UpdateEmployeeActivity.this, "Error : " + t.getMessage(), Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
+                }).setNegativeButton(android.R.string.no, null).show();
+
     }
 
     private void updateEmployee() {
@@ -93,7 +102,7 @@ public class UpdateEmployeeActivity extends AppCompatActivity {
                 Integer.parseInt(etAge.getText().toString())
         );
 
-        Call<Void> voidCall = employeeAPI.updateEmployee(Integer.parseInt(etNo.getText().toString()),employee);
+        Call<Void> voidCall = employeeAPI.updateEmployee(Integer.parseInt(etNo.getText().toString()), employee);
         voidCall.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
@@ -102,7 +111,7 @@ public class UpdateEmployeeActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Toast.makeText(UpdateEmployeeActivity.this, "Error : "+t.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(UpdateEmployeeActivity.this, "Error : " + t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
 
@@ -121,7 +130,7 @@ public class UpdateEmployeeActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Employee> call, Throwable t) {
-                Toast.makeText(UpdateEmployeeActivity.this, "Error : "+t.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(UpdateEmployeeActivity.this, "Error : " + t.getMessage(), Toast.LENGTH_LONG).show();
 
             }
         });
